@@ -1,0 +1,82 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  font-family: Verdana, sans-serif;
+}
+
+.app__header {
+  background-color: maroon;
+  background-image: linear-gradient(red, maroon);
+}
+.app__logo {
+  padding: 0.5em;
+  padding-bottom: 0;
+  padding-left: 2em;
+}
+.app__main {
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+.app__footer {
+  background-color: maroon;
+}
+.app__copyright {
+  font-size: 0.75rem;
+  font-family: Verdana, sans-serif;
+  color: #f2f3f4;
+  text-align: right;
+  padding: 0.75em;
+}
+
+.channel-list {
+  overflow-y: scroll;
+  background-color: #555;
+}
+
+.channel {
+  background-color: #ccc;
+  padding: 3em;
+  margin: 0.5em;
+  border-radius: 5px;
+  min-height: 0;
+}
+
+.playback {
+  background-color: #101010;
+  padding: 1em;
+  display: flex;
+  justify-content: center;
+}
+.playback__play {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: black;
+  font-weight: 900;
+  background-color: red;
+  padding: 0.25em 1em;
+  margin: 0.5em;
+  border: 2px solid red;
+  border-radius: 3px;
+}
+.playback__play:focus, .playback__play:hover {
+  color: #f2f3f4;
+  background-color: maroon;
+  background-image: linear-gradient(maroon, red);
+  border: 2px solid #f2f3f4;
+}
+.playback__tempo {
+  margin: 1em;
+  padding: 0.5em;
+  border-radius: 3px;
+}
+
+/*# sourceMappingURL=style.css.map */

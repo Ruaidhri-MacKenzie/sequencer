@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="css/style.css" type="text/css" />
+		<link rel="shortcut icon" href="img/favicon-32.png" type="image/png" sizes="32x32" />
+		<link rel="shortcut icon" href="img/favicon-192.png" type="image/png" sizes="192x192" />
+		<title>Hotstepper - Free sequencer</title>
+	</head>
+	<body>
+		<header class="app__header">
+			<img class="app__logo" src="img/logo1.png" alt="Hotstepper logo" />
+		</header>
+		<main class="app__main">
+			<section class="channel-list">
+				<!-- Channel (template) x8 -->
+			</section>
+			<section class="playback">
+				<button class="playback__play">▶</button>
+				<input class="playback__tempo" placeholder="Enter Tempo" type="number" min="60" max="240" step="1" />
+			</section>
+		</main>
+		<footer class="app__footer">
+			<p class="app__copyright">Ruaidhri MacKenzie &copy; 2021</p>
+		</footer>
+
+		<!-- Channel -->
+		<template id="channel">
+			<div class="channel">
+				<!-- Patch drop-down -->
+				<!-- Pan number input -->
+				<!-- Level number input -->
+				<!-- Sequence (template) -->
+				<!-- Solo checkbox -->
+				<!-- Mute checkbox -->
+			</div>
+		</template>
+		<script type="module" src="src/main.js"></script>
+	</body>
+</html>

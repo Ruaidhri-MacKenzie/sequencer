@@ -1,0 +1,94 @@
+@use "colours";
+@use "fonts";
+
+// CSS reset defaults
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	height: 100vh;
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	font-family: fonts.$body;
+}
+
+.app {
+	&__header {
+		background-color: colours.$brand1;
+		background-image: linear-gradient(colours.$brand2, colours.$brand1);
+	}
+
+	&__logo {
+		padding: 0.5em;
+		padding-bottom: 0;
+		padding-left: 2em;
+	}
+
+	&__main {
+		display: grid;
+		grid-template-rows: 1fr auto;
+	}
+
+	&__footer {
+		background-color: colours.$brand1;
+	}
+
+	&__copyright {
+		font-size: 0.75rem;
+		font-family: fonts.$copyright;
+		color: colours.$light;
+		text-align: right;
+		padding: 0.75em;
+	}
+}
+
+.channel-list {
+	overflow-y: scroll;
+	background-color: #555;
+}
+
+.channel {
+	background-color: colours.$grey;
+	padding: 3em;
+	margin: 0.5em;
+	border-radius: 5px;
+	min-height: 0;
+}
+
+.playback {
+	background-color: colours.$dark;
+	padding: 1em;
+	display: flex;
+	justify-content: center;
+
+	&__play {
+		cursor: pointer;
+		font-size: 1.5rem;
+		color: black;
+		font-weight: 900;
+		background-color: colours.$brand2;
+		padding: 0.25em 1em;
+		margin: 0.5em;
+		border: 2px solid colours.$brand2;
+		border-radius: 3px;
+
+		&:focus,
+		&:hover {
+			color: colours.$light;
+			background-color: colours.$brand1;
+			background-image: linear-gradient(colours.$brand1, colours.$brand2);
+			border: 2px solid colours.$light;
+		}
+	}
+
+	&__tempo {
+		margin: 1em;
+		padding: 0.5em;
+		border-radius: 3px;
+	}
+}

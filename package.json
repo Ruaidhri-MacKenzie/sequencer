@@ -1,0 +1,22 @@
+{
+	"name": "hotstepper",
+	"version": "1.0.0",
+	"description": "Web-based Sequencer",
+	"main": "index.js",
+	"scripts": {
+		"sass": "sass --watch scss:css"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Ruaidhri-MacKenzie/sequencer.git"
+	},
+	"author": "Ruaidhri MacKenzie",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/Ruaidhri-MacKenzie/sequencer/issues"
+	},
+	"homepage": "https://github.com/Ruaidhri-MacKenzie/sequencer#readme",
+	"devDependencies": {
+		"sass": "^1.32.8"
+	}
+}
