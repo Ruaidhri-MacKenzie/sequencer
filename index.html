@@ -27,16 +27,44 @@
 		</footer>
 
 		<!-- Channel -->
-		<template id="channel">
+		<template id="channel-template">
 			<div class="channel">
-				<!-- Patch drop-down -->
-				<!-- Pan number input -->
-				<!-- Level number input -->
-				<!-- Sequence (template) -->
-				<!-- Solo checkbox -->
-				<!-- Mute checkbox -->
+				<div class="channel__controls">
+					<!-- Patch drop-down -->
+					<label class="channel__patch-label" for="patch">Patch</label>
+					<select class="channel__patch" id="patch">
+						<option value="kick">Kick Drum</option>
+						<option value="snare">Snare Drum</option>
+					</select>
+
+					<!-- Pan number input -->
+					<label class="channel__pan-label" for="pan">Pan</label>
+					<input class="channel__pan" type="range" id="pan" value="0" min="-100" max="100" />
+
+					<!-- Level number input -->
+					<label class="channel__level-label" for="level">Level</label>
+					<input class="channel__level" type="number" id="level" value="75" min="0" max="100" />
+
+					<!-- Solo button -->
+					<button class="channel__solo">Solo</button>
+
+					<!-- Mute button -->
+					<button class="channel__mute">Mute</button>
+				</div>
+
+				<div class="channel__sequence"></div>
 			</div>
 		</template>
+
+		<!-- Step -->
+		<template id="step-template">
+			<div class="step">
+				<label class="step__label" for="step"></label>
+				<input class="step__checkbox" type="checkbox" id="step" />
+				<div class="step__display"></div>
+			</div>
+		</template>
+
 		<script type="module" src="src/main.js"></script>
 	</body>
 </html>

@@ -1,6 +1,41 @@
-$brand1: maroon;
-$brand2: red;
-$highlight: deepskyblue;
-$light: #f2f3f4;
-$dark: #101010;
-$grey: #ccc;
+$brand1: #800000;
+$brand2: #ff0000;
+$highlight: hsl(195, 100%, 50%);
+$light: #f1f2f3;
+$dark: #0f0f0f;
+$grey: #ababab;
+$darkgrey: #545454;
+$lightgrey: #cccccc;
+
+$primary-10: hsl(0, 100%, 10%);
+$primary-25: hsl(0, 90%, 20%);
+$primary-30: hsl(0, 80%, 30%);
+$primary-40: hsl(0, 70%, 40%);
+$primary-50: hsl(0, 60%, 50%);
+$primary-60: hsl(0, 50%, 60%);
+
+$secondary-10: hsl(40, 100%, 10%);
+$secondary-20: hsl(40, 90%, 20%);
+$secondary-30: hsl(40, 80%, 30%);
+$secondary-40: hsl(40, 70%, 40%);
+$secondary-50: hsl(40, 60%, 50%);
+$secondary-60: hsl(40, 50%, 60%);
+
+$highlight-10: hsl(195, 100%, 10%);
+$highlight-20: hsl(195, 90%, 20%);
+$highlight-30: hsl(195, 80%, 30%);
+$highlight-40: hsl(195, 70%, 40%);
+$highlight-50: hsl(195, 60%, 50%);
+$highlight-60: hsl(195, 50%, 60%);
+
+$black: hsl(0, 0%, 0%);
+$grey-10: hsl(0, 0%, 10%);
+$grey-20: hsl(0, 0%, 20%);
+$grey-30: hsl(0, 0%, 30%);
+$grey-40: hsl(0, 0%, 40%);
+$grey-50: hsl(0, 0%, 50%);
+$grey-60: hsl(0, 0%, 60%);
+$grey-70: hsl(0, 0%, 70%);
+$grey-80: hsl(0, 0%, 80%);
+$grey-90: hsl(0, 0%, 90%);
+$white: hsl(0, 0%, 100%);

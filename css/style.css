@@ -14,8 +14,8 @@ body {
 }
 
 .app__header {
-  background-color: maroon;
-  background-image: linear-gradient(red, maroon);
+  background-color: #800000;
+  background-image: linear-gradient(#ff0000, #800000);
 }
 .app__logo {
   padding: 0.5em;
@@ -27,12 +27,12 @@ body {
   grid-template-rows: 1fr auto;
 }
 .app__footer {
-  background-color: maroon;
+  background-color: #800000;
 }
 .app__copyright {
   font-size: 0.75rem;
   font-family: Verdana, sans-serif;
-  color: #f2f3f4;
+  color: #e6e6e6;
   text-align: right;
   padding: 0.75em;
 }
@@ -43,15 +43,135 @@ body {
 }
 
 .channel {
-  background-color: #ccc;
-  padding: 3em;
+  background-color: #b3b3b3;
   margin: 0.5em;
   border-radius: 5px;
   min-height: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.channel__controls {
+  padding: 0.5em 1em;
+  background-color: #999999;
+  border-radius: 5px 0 0 5px;
+  display: grid;
+  grid-template-areas: "patch-label	pan-label	level-label	.			." "patch				pan				level				solo	mute";
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+.channel__patch {
+  grid-area: patch;
+  cursor: pointer;
+  width: 10em;
+  margin: 0 0.5em;
+  padding: 0.25em;
+}
+.channel__patch-label {
+  grid-area: patch-label;
+  font-size: 0.75rem;
+  align-self: flex-end;
+  margin: 0 0.5em;
+}
+.channel__pan {
+  grid-area: pan;
+  width: 5em;
+  margin: 0 0.5em;
+  padding: 0.25em;
+}
+.channel__pan-label {
+  grid-area: pan-label;
+  font-size: 0.75rem;
+  align-self: flex-end;
+  margin: 0 0.5em;
+}
+.channel__level {
+  grid-area: level;
+  width: 5em;
+  margin: 0 0.5em;
+  padding: 0.25em;
+}
+.channel__level-label {
+  grid-area: level-label;
+  font-size: 0.75rem;
+  margin: 0 0.5em;
+  align-self: flex-end;
+}
+.channel__solo {
+  grid-area: solo;
+  cursor: pointer;
+  margin: 0.5em;
+  padding: 0.25em;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: transparent;
+}
+.channel__solo:hover {
+  border: 1px solid white;
+  color: white;
+}
+.channel__solo--active {
+  color: white;
+  background-color: #33a6cc;
+}
+.channel__mute {
+  grid-area: mute;
+  cursor: pointer;
+  margin: 0.5em;
+  padding: 0.25em;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: transparent;
+}
+.channel__mute:hover {
+  border: 1px solid white;
+  color: white;
+}
+.channel__mute--active {
+  color: white;
+  background-color: #ad1f1f;
+}
+.channel__sequence {
+  padding: 0.5em 1em;
+  background-color: #b3b3b3;
+  border-radius: 0 5px 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.step {
+  display: grid;
+  grid-template-areas: "step";
+  margin: 0 0.125em;
+}
+.step:nth-child(4n) {
+  margin-right: 0.75em;
+}
+.step__label {
+  grid-area: step;
+}
+.step__display {
+  grid-area: step;
+  font-size: 0.75rem;
+  width: 1.25em;
+  height: 1.75em;
+  background-color: none;
+  border: 2px solid red;
+  text-align: center;
+  border-radius: 0.5em;
+}
+.step__checkbox {
+  grid-area: step;
+  cursor: pointer;
+  opacity: 0;
+}
+.step__checkbox:checked + * {
+  background-color: red;
+  border: 2px solid white;
 }
 
 .playback {
-  background-color: #101010;
+  background-color: #1a1a1a;
   padding: 1em;
   display: flex;
   justify-content: center;
@@ -61,17 +181,17 @@ body {
   font-size: 1.5rem;
   color: black;
   font-weight: 900;
-  background-color: red;
+  background-color: #ff0000;
   padding: 0.25em 1em;
   margin: 0.5em;
-  border: 2px solid red;
+  border: 2px solid #ff0000;
   border-radius: 3px;
 }
 .playback__play:focus, .playback__play:hover {
-  color: #f2f3f4;
-  background-color: maroon;
-  background-image: linear-gradient(maroon, red);
-  border: 2px solid #f2f3f4;
+  color: #e6e6e6;
+  background-color: #800000;
+  background-image: linear-gradient(#800000, #ff0000);
+  border: 2px solid #e6e6e6;
 }
 .playback__tempo {
   margin: 1em;

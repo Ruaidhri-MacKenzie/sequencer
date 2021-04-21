@@ -1,5 +1,6 @@
 @use "colours";
 @use "fonts";
+@use "components";
 
 // CSS reset defaults
 *,
@@ -41,7 +42,7 @@ body {
 	&__copyright {
 		font-size: 0.75rem;
 		font-family: fonts.$copyright;
-		color: colours.$light;
+		color: colours.$grey-90;
 		text-align: right;
 		padding: 0.75em;
 	}
@@ -53,15 +54,126 @@ body {
 }
 
 .channel {
-	background-color: colours.$grey;
-	padding: 3em;
+	background-color: colours.$grey-70;
 	margin: 0.5em;
 	border-radius: 5px;
 	min-height: 0;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+
+	&__controls {
+		padding: 0.5em 1em;
+		background-color: colours.$grey-60;
+		border-radius: 5px 0 0 5px;
+		display: grid;
+		grid-template-areas:
+			"patch-label	pan-label	level-label	.			."
+			"patch				pan				level				solo	mute";
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__patch {
+		grid-area: patch;
+		cursor: pointer;
+		width: 10em;
+		margin: 0 0.5em;
+		padding: 0.25em;
+
+		&-label {
+			grid-area: patch-label;
+			font-size: 0.75rem;
+			align-self: flex-end;
+			margin: 0 0.5em;
+		}
+	}
+
+	&__pan {
+		grid-area: pan;
+		width: 5em;
+		margin: 0 0.5em;
+		padding: 0.25em;
+
+		&-label {
+			grid-area: pan-label;
+			font-size: 0.75rem;
+			align-self: flex-end;
+			margin: 0 0.5em;
+		}
+	}
+
+	&__level {
+		grid-area: level;
+		width: 5em;
+		margin: 0 0.5em;
+		padding: 0.25em;
+
+		&-label {
+			grid-area: level-label;
+			font-size: 0.75rem;
+			margin: 0 0.5em;
+			align-self: flex-end;
+		}
+	}
+
+	&__solo {
+		grid-area: solo;
+		@include components.channelButton(colours.$highlight-50);
+	}
+
+	&__mute {
+		grid-area: mute;
+		@include components.channelButton(colours.$primary-40);
+	}
+
+	&__sequence {
+		padding: 0.5em 1em;
+		background-color: colours.$grey-70;
+		border-radius: 0 5px 5px 0;
+		display: flex;
+		align-items: center;
+	}
+}
+
+.step {
+	display: grid;
+	grid-template-areas: "step";
+	margin: 0 0.125em;
+
+	&:nth-child(4n) {
+		margin-right: 0.75em;
+	}
+
+	&__label {
+		grid-area: step;
+	}
+
+	&__display {
+		grid-area: step;
+		font-size: 0.75rem;
+		width: 1.25em;
+		height: 1.75em;
+		background-color: none;
+		border: 2px solid red;
+		text-align: center;
+		border-radius: 0.5em;
+	}
+
+	&__checkbox {
+		grid-area: step;
+		cursor: pointer;
+		opacity: 0;
+
+		&:checked + * {
+			background-color: red;
+			border: 2px solid white;
+		}
+	}
 }
 
 .playback {
-	background-color: colours.$dark;
+	background-color: colours.$grey-10;
 	padding: 1em;
 	display: flex;
 	justify-content: center;
@@ -79,10 +191,10 @@ body {
 
 		&:focus,
 		&:hover {
-			color: colours.$light;
+			color: colours.$grey-90;
 			background-color: colours.$brand1;
 			background-image: linear-gradient(colours.$brand1, colours.$brand2);
-			border: 2px solid colours.$light;
+			border: 2px solid colours.$grey-90;
 		}
 	}
 
