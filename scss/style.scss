@@ -51,28 +51,36 @@ body {
 .channel-list {
 	overflow-y: scroll;
 	background-color: #555;
-}
-
-.channel {
-	background-color: colours.$grey-70;
-	margin: 0.5em;
-	border-radius: 5px;
-	min-height: 0;
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
 
 	&__controls {
-		padding: 0.5em 1em;
-		background-color: colours.$grey-60;
-		border-radius: 5px 0 0 5px;
-		display: grid;
-		grid-template-areas:
-			"patch-label	pan-label	level-label	.			."
-			"patch				pan				level				solo	mute";
-		text-align: center;
-		justify-content: center;
-		align-items: center;
+		padding-top: 1em;
+		padding-left: 1em;
 	}
+
+	&__sequences {
+		overflow-x: scroll;
+		overflow-y: hidden;
+		background-color: #555;
+		padding-top: 1em;
+		padding-right: 1em;
+	}
+}
+
+.channel {
+	margin: 0.5em;
+	margin-right: 0;
+	padding: 0.5em 1em;
+	background-color: colours.$grey-60;
+	border-radius: 5px 0 0 5px;
+	display: grid;
+	grid-template-areas:
+		"patch-label	pan-label	level-label	.			."
+		"patch				pan				level				solo	mute";
+	text-align: center;
+	justify-content: center;
+	align-items: center;
 
 	&__patch {
 		grid-area: patch;
@@ -108,6 +116,7 @@ body {
 		width: 5em;
 		margin: 0 0.5em;
 		padding: 0.25em;
+		text-align: center;
 
 		&-label {
 			grid-area: level-label;
@@ -128,8 +137,11 @@ body {
 	}
 
 	&__sequence {
-		padding: 0.5em 1em;
-		background-color: colours.$grey-70;
+		width: max-content;
+		margin: 0.5em;
+		margin-left: 0;
+		padding: 1.5em 1em;
+		background-color: colours.$grey-50;
 		border-radius: 0 5px 5px 0;
 		display: flex;
 		align-items: center;
@@ -137,45 +149,35 @@ body {
 }
 
 .step {
-	display: grid;
-	grid-template-areas: "step";
-	margin: 0 0.125em;
+	margin: 0 0.25em;
+	font-size: 0.75rem;
+	width: 1.25em;
+	height: 1.75em;
+	background-color: none;
+	border: 2px solid red;
+	text-align: center;
+	border-radius: 0.5em;
+	cursor: pointer;
+
+	&--active {
+		background-color: red;
+		border: 2px solid black;
+	}
+
+	&--playing {
+		border: 2px solid white;
+	}
 
 	&:nth-child(4n) {
-		margin-right: 0.75em;
-	}
-
-	&__label {
-		grid-area: step;
-	}
-
-	&__display {
-		grid-area: step;
-		font-size: 0.75rem;
-		width: 1.25em;
-		height: 1.75em;
-		background-color: none;
-		border: 2px solid red;
-		text-align: center;
-		border-radius: 0.5em;
-	}
-
-	&__checkbox {
-		grid-area: step;
-		cursor: pointer;
-		opacity: 0;
-
-		&:checked + * {
-			background-color: red;
-			border: 2px solid white;
-		}
+		margin-right: 2em;
 	}
 }
 
 .playback {
 	background-color: colours.$grey-10;
 	padding: 1em;
-	display: flex;
+	display: grid;
+	grid-template-columns: auto auto;
 	justify-content: center;
 
 	&__play {
@@ -189,6 +191,11 @@ body {
 		border: 2px solid colours.$brand2;
 		border-radius: 3px;
 
+		&-label {
+			color: colours.$white;
+			text-align: center;
+		}
+
 		&:focus,
 		&:hover {
 			color: colours.$grey-90;
@@ -200,7 +207,15 @@ body {
 
 	&__tempo {
 		margin: 1em;
-		padding: 0.5em;
 		border-radius: 3px;
+		text-align: center;
+		font-size: 1rem;
+		appearance: textfield;
+		width: 5em;
+
+		&-label {
+			color: colours.$white;
+			text-align: center;
+		}
 	}
 }
