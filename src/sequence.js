@@ -1,3 +1,5 @@
+import { STEP_COUNT } from "./constants.js";
+
 export default class Sequence {
 	constructor(context, index) {
 		this.context = context;
@@ -6,7 +8,7 @@ export default class Sequence {
 
 		this.$element = document.getElementById(`sequence${this.index}`);
 
-		for (let i = 0; i < 16; i++) {
+		for (let i = 0; i < STEP_COUNT; i++) {
 			this.steps.push(false);
 
 			const $step = document.createElement("div");

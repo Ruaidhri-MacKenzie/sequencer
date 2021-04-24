@@ -1,5 +1,5 @@
 import Channel from "./channel.js";
-import { TEMPO } from "./constants.js";
+import { TEMPO, CHANNEL_COUNT, STEP_COUNT, LOOKAHEAD, SCHEDULE_AHEAD_TIME } from "./constants.js";
 
 export default class Sequencer {
 	constructor() {
@@ -10,7 +10,7 @@ export default class Sequencer {
 		this.$channelList = document.querySelector(".channel-list__controls");
 		this.$sequenceList = document.querySelector(".channel-list__sequences");
 		this.channelList = [];
-		for (let i = 0; i < 8; i++) {
+		for (let i = 0; i < CHANNEL_COUNT; i++) {
 			this.addChannel(i);
 		}
 
@@ -21,14 +21,12 @@ export default class Sequencer {
 		this.$play.onclick = this.play.bind(this);
 		this.$tempo.onchange = this.setTempo.bind(this);
 
-		this.lookahead = 25; // in ms
-		this.scheduleAheadTime = 0.1; // in sec
-		this.tempo = TEMPO.default;
+		this.tempo = TEMPO.default; // in bpm
 		this.currentStep = 0;
 		this.nextStepTime = 0;
+		this.lastStepDrawn = 1;
 		this.stepQueue = [];
 		this.isPlaying = false;
-		this.lastStepDrawn = 1;
 	}
 
 	addChannel(index) {
@@ -65,7 +63,7 @@ export default class Sequencer {
 		const secondsPerBeat = 60 / this.tempo;
 		this.nextStepTime += secondsPerBeat;
 		this.currentStep += 1;
-		this.currentStep %= 16;
+		this.currentStep %= STEP_COUNT;
 	}
 
 	scheduleStep(step, time) {
@@ -100,11 +98,11 @@ export default class Sequencer {
 	}
 
 	scheduler() {
-		while (this.nextStepTime < this.context.currentTime + this.scheduleAheadTime) {
+		while (this.nextStepTime < this.context.currentTime + SCHEDULE_AHEAD_TIME) {
 			this.scheduleStep(this.currentStep, this.nextStepTime);
 			this.nextStep();
 		}
-		this.timerID = setTimeout(this.scheduler.bind(this), this.lookahead);
+		this.timerID = setTimeout(this.scheduler.bind(this), LOOKAHEAD);
 	}
 
 	play() {

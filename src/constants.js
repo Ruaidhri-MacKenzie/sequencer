@@ -21,3 +21,9 @@ export const TEMPO = {
 	default: 120,
 	max: 240,
 };
+
+export const CHANNEL_COUNT = 8;
+export const STEP_COUNT = 16;
+
+export const LOOKAHEAD = 25; // in ms
+export const SCHEDULE_AHEAD_TIME = 0.1; // in sec
