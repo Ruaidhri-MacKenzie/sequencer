@@ -1,26 +1,28 @@
 export default class Sequence {
-	constructor($element) {
-		this.$element = $element;
-		this.$stepTemplate = document.querySelector("#step-template");
-
+	constructor(context, index) {
+		this.context = context;
+		this.index = index;
 		this.steps = [];
 
-		this.addSteps(16);
-	}
+		this.$element = document.getElementById(`sequence${this.index}`);
 
-	toggleStep(index) {
-		this.steps[index] = !this.steps[index];
-	}
-
-	addSteps(quantity = 1) {
-		for (let i = 0; i < quantity; i++) {
+		for (let i = 0; i < 16; i++) {
 			this.steps.push(false);
-			const $step = this.$stepTemplate.content.cloneNode(true);
+
+			const $step = document.createElement("div");
+			$step.classList.add("step");
+			$step.setAttribute("data-index", i);
+			$step.onclick = this.toggleStep.bind(this);
+
 			this.$element.appendChild($step);
 		}
 	}
 
-	removeSteps(startIndex, quantity = 1) {
-		this.steps.splice(startIndex, quantity);
+	toggleStep(event) {
+		const $step = event.target;
+		$step.classList.toggle("step--active");
+
+		const index = $step.dataset.index;
+		this.steps[index] = !this.steps[index];
 	}
 }
