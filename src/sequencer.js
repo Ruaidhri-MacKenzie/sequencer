@@ -1,5 +1,6 @@
 import Channel from "./channel.js";
 import { TEMPO, CHANNEL_COUNT, STEP_COUNT, LOOKAHEAD, SCHEDULE_AHEAD_TIME } from "./constants.js";
+import StepQueue from "./queue.js";
 
 export default class Sequencer {
 	constructor() {
@@ -25,7 +26,7 @@ export default class Sequencer {
 		this.currentStep = 0;
 		this.nextStepTime = 0;
 		this.lastStepDrawn = 1;
-		this.stepQueue = [];
+		this.stepQueue = new StepQueue();
 		this.isPlaying = false;
 	}
 
@@ -61,13 +62,14 @@ export default class Sequencer {
 
 	nextStep() {
 		const secondsPerBeat = 60 / this.tempo;
-		this.nextStepTime += secondsPerBeat;
+		const secondsPerStep = secondsPerBeat / 4;
+		this.nextStepTime += secondsPerStep;
 		this.currentStep += 1;
 		this.currentStep %= STEP_COUNT;
 	}
 
 	scheduleStep(step, time) {
-		this.stepQueue.push({ step, time });
+		this.stepQueue.enqueue(step, time);
 
 		this.channelList.forEach((channel) => {
 			if (channel.sequence.steps[step]) {
@@ -80,9 +82,9 @@ export default class Sequencer {
 		let drawStep = this.lastStepDrawn;
 		let currentTime = this.context.currentTime;
 
-		while (this.stepQueue.length && this.stepQueue[0].time < currentTime) {
-			drawStep = this.stepQueue[0].step;
-			this.stepQueue.splice(0, 1);
+		while (this.stepQueue.length && this.stepQueue.getHead().time < currentTime) {
+			drawStep = this.stepQueue.getHead().step;
+			this.stepQueue.dequeue();
 		}
 
 		if (this.lastStepDrawn != drawStep) {
