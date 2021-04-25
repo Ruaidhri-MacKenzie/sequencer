@@ -19,7 +19,7 @@ export default class Synth {
 	}
 
 	play(time) {
-		const duration = 1;
+		const duration = 4 / 16; // 4 beats in sixteenth notes
 
 		const oscillator = this.context.createOscillator();
 		oscillator.type = this.patch.oscillatorType || "sine";
