@@ -1,6 +1,6 @@
 import Channel from "./channel.js";
-import { TEMPO, CHANNEL_COUNT, STEP_COUNT, LOOKAHEAD, SCHEDULE_AHEAD_TIME } from "./constants.js";
 import StepQueue from "./queue.js";
+import { TEMPO, CHANNEL_COUNT, STEP_COUNT, LOOKAHEAD, SCHEDULE_AHEAD_TIME } from "./constants.js";
 
 export default class Sequencer {
 	constructor() {
@@ -17,9 +17,12 @@ export default class Sequencer {
 
 		// Playback
 		this.$play = document.querySelector(".playback__play");
+		this.$playLabel = document.querySelector(".playback__play-label");
+		this.$stop = document.querySelector(".playback__stop");
 		this.$tempo = document.querySelector(".playback__tempo");
 
 		this.$play.onclick = this.play.bind(this);
+		this.$stop.onclick = this.stop.bind(this);
 		this.$tempo.onchange = this.setTempo.bind(this);
 
 		this.tempo = TEMPO.default; // in bpm
@@ -28,6 +31,20 @@ export default class Sequencer {
 		this.lastStepDrawn = 1;
 		this.stepQueue = new StepQueue();
 		this.isPlaying = false;
+
+		this.soloChannel = null;
+	}
+
+	setSolo(channelIndex) {
+		const $soloButtons = document.querySelectorAll(".channel__solo");
+		$soloButtons.forEach(($solo) => $solo.classList.remove("channel__solo--active"));
+
+		if (this.soloChannel === channelIndex) {
+			this.soloChannel = null;
+		} else {
+			this.soloChannel = channelIndex;
+			$soloButtons[channelIndex].classList.add("channel__solo--active");
+		}
 	}
 
 	addChannel(index) {
@@ -40,24 +57,19 @@ export default class Sequencer {
 		$sequence.setAttribute("id", `sequence${index}`);
 		this.$sequenceList.appendChild($sequence);
 
-		const channel = new Channel(this.context, index, this.resetSoloAll.bind(this));
+		const channel = new Channel(this.context, index, this.setSolo.bind(this));
 		this.channelList.push(channel);
 	}
 
-	resetSoloAll() {
-		this.channelList.forEach((channel) => {
-			channel.resetSolo();
-		});
-	}
-
 	setTempo() {
-		const tempo = Number(this.$tempo.value);
-		if (tempo >= TEMPO.min && tempo <= TEMPO.max) {
-			this.tempo = tempo;
-		} else {
-			this.tempo = TEMPO.default;
-			this.$tempo.value = TEMPO.default;
-		}
+		const tempo = parseInt(this.$tempo.value, 10);
+
+		if (isNaN(tempo)) this.tempo = TEMPO.default;
+		else if (tempo < TEMPO.min) this.tempo = TEMPO.min;
+		else if (tempo > TEMPO.max) this.tempo = TEMPO.max;
+		else this.tempo = tempo;
+
+		this.$tempo.value = this.tempo;
 	}
 
 	nextStep() {
@@ -71,14 +83,19 @@ export default class Sequencer {
 	scheduleStep(step, time) {
 		this.stepQueue.enqueue(step, time);
 
-		this.channelList.forEach((channel) => {
-			if (channel.sequence.steps[step]) {
-				channel.synth.play(time);
-			}
-		});
+		if (this.soloChannel != null) {
+			const channel = this.channelList[this.soloChannel];
+			channel.play(step, time);
+		} else {
+			this.channelList.forEach((channel) => {
+				channel.play(step, time);
+			});
+		}
 	}
 
-	draw() {
+	drawSteps() {
+		if (!this.isPlaying) return;
+
 		let drawStep = this.lastStepDrawn;
 		let currentTime = this.context.currentTime;
 
@@ -89,6 +106,7 @@ export default class Sequencer {
 
 		if (this.lastStepDrawn != drawStep) {
 			const $sequences = document.querySelectorAll(".channel__sequence");
+
 			$sequences.forEach(($sequence) => {
 				$sequence.children[this.lastStepDrawn].classList.remove("step--playing");
 				$sequence.children[drawStep].classList.add("step--playing");
@@ -96,7 +114,8 @@ export default class Sequencer {
 
 			this.lastStepDrawn = drawStep;
 		}
-		requestAnimationFrame(this.draw.bind(this));
+
+		requestAnimationFrame(this.drawSteps.bind(this));
 	}
 
 	scheduler() {
@@ -109,24 +128,33 @@ export default class Sequencer {
 
 	play() {
 		if (this.isPlaying) {
-			this.isPlaying = false;
-			this.stop();
+			this.pause();
 			return;
 		}
 
 		this.isPlaying = true;
-		if (this.context.state === "suspended") {
-			this.context.resume();
-		}
 
-		this.currentStep = 0;
+		this.$play.textContent = "⏸";
+		this.$playLabel.textContent = "Pause";
+
 		this.nextStepTime = this.context.currentTime;
 		this.scheduler();
-		requestAnimationFrame(this.draw.bind(this));
+		requestAnimationFrame(this.drawSteps.bind(this));
+	}
+
+	pause() {
+		if (!this.isPlaying) return;
+
+		this.isPlaying = false;
+		clearTimeout(this.timerID);
+		this.$play.textContent = "▶";
+		this.$playLabel.textContent = "Play";
 	}
 
 	stop() {
-		clearTimeout(this.timerID);
+		this.pause();
+
+		this.currentStep = 0;
 		const $sequences = document.querySelectorAll(".channel__sequence");
 		$sequences.forEach(($sequence) => {
 			$sequence.children[this.lastStepDrawn].classList.remove("step--playing");
