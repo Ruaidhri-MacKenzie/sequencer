@@ -2,16 +2,14 @@ import Sequence from "./sequence.js";
 import Synth from "./synth.js";
 
 export default class Channel {
-	constructor(context, index, resetSoloAll) {
+	constructor(context, index, setSolo) {
 		this.context = context;
 		this.index = index;
-		this.resetSoloAll = resetSoloAll;
 
 		this.level = 75;
 		this.pan = 0;
 		this.patch = "";
 		this.isMute = false;
-		this.isSolo = false;
 
 		this.$element = document.getElementById(`channel${this.index}`);
 		this.$level = this.$element.querySelector(".channel__level");
@@ -27,7 +25,7 @@ export default class Channel {
 		this.$pan.onchange = this.setPan.bind(this);
 		this.$patch.onchange = this.setPatch.bind(this);
 		this.$mute.onclick = this.toggleMute.bind(this);
-		this.$solo.onclick = this.toggleSolo.bind(this);
+		this.$solo.onclick = () => setSolo(index);
 	}
 
 	setLevel() {
@@ -48,14 +46,11 @@ export default class Channel {
 		this.$mute.classList.toggle("channel__mute--active");
 	}
 
-	toggleSolo() {
-		if (!this.isSolo) this.resetSoloAll();
-		this.isSolo = !this.isSolo;
-		this.$solo.classList.toggle("channel__solo--active");
-	}
+	play(step, time) {
+		if (this.isMute) return;
 
-	resetSolo() {
-		this.isSolo = false;
-		this.$solo.classList.remove("channel__solo--active");
+		if (this.sequence.steps[step]) {
+			this.synth.play(time);
+		}
 	}
 }
