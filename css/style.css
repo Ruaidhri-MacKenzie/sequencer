@@ -148,6 +148,7 @@ body {
   border-radius: 0 5px 5px 0;
   display: flex;
   align-items: center;
+  counter-reset: bar;
 }
 
 .step {
@@ -168,6 +169,17 @@ body {
 .step--playing {
   border: 2px solid white;
 }
+.step:nth-child(4n-3) {
+  position: relative;
+  counter-increment: bar;
+}
+.step:nth-child(4n-3):after {
+  content: counter(bar);
+  position: absolute;
+  top: -20px;
+  left: 0;
+  font-size: 0.625rem;
+}
 .step:nth-child(4n) {
   margin-right: 2em;
 }
@@ -176,32 +188,63 @@ body {
   background-color: #1a1a1a;
   padding: 1em;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-areas: "play-label		stop-label	tempo-label" "play-button	stop-button	tempo-input";
   justify-content: center;
 }
 .playback__play {
   cursor: pointer;
   font-size: 1.5rem;
-  color: black;
   font-weight: 900;
-  background-color: #ff0000;
   padding: 0.25em 1em;
   margin: 0.5em;
   border: 2px solid #ff0000;
   border-radius: 3px;
-}
-.playback__play-label {
-  color: white;
-  text-align: center;
+  color: black;
+  background-color: #ff0000;
+  grid-area: play-button;
 }
 .playback__play:focus, .playback__play:hover {
+  border: 2px solid #e6e6e6;
+}
+.playback__play:hover {
   color: #e6e6e6;
   background-color: #800000;
   background-image: linear-gradient(#800000, #ff0000);
+}
+.playback__play-label {
+  grid-area: play-label;
+  color: white;
+  text-align: center;
+}
+.playback__stop {
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 900;
+  padding: 0.25em 1em;
+  margin: 0.5em;
+  border: 2px solid #ff0000;
+  border-radius: 3px;
+  color: black;
+  background-color: #ff0000;
+  grid-area: stop-button;
+}
+.playback__stop:focus, .playback__stop:hover {
   border: 2px solid #e6e6e6;
 }
+.playback__stop:hover {
+  color: #e6e6e6;
+  background-color: #800000;
+  background-image: linear-gradient(#800000, #ff0000);
+}
+.playback__stop-label {
+  grid-area: stop-label;
+  color: white;
+  text-align: center;
+}
 .playback__tempo {
+  grid-area: tempo-input;
   margin: 1em;
+  padding-right: 1em;
   border-radius: 3px;
   text-align: center;
   font-size: 1rem;
@@ -209,8 +252,17 @@ body {
   width: 5em;
 }
 .playback__tempo-label {
+  grid-area: tempo-label;
   color: white;
   text-align: center;
+}
+.playback__tempo-bpm {
+  grid-area: tempo-input;
+  cursor: text;
+  justify-self: flex-end;
+  align-self: center;
+  margin: 0.5em 2.25em 0;
+  font-size: 0.625rem;
 }
 
 /*# sourceMappingURL=style.css.map */

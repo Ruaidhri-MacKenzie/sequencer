@@ -145,6 +145,7 @@ body {
 		border-radius: 0 5px 5px 0;
 		display: flex;
 		align-items: center;
+		counter-reset: bar;
 	}
 }
 
@@ -168,6 +169,19 @@ body {
 		border: 2px solid white;
 	}
 
+	&:nth-child(4n - 3) {
+		position: relative;
+		counter-increment: bar;
+
+		&:after {
+			content: counter(bar);
+			position: absolute;
+			top: -20px;
+			left: 0;
+			font-size: 0.625rem;
+		}
+	}
+
 	&:nth-child(4n) {
 		margin-right: 2em;
 	}
@@ -177,36 +191,37 @@ body {
 	background-color: colours.$grey-10;
 	padding: 1em;
 	display: grid;
-	grid-template-columns: auto auto;
+	grid-template-areas:
+		"play-label		stop-label	tempo-label"
+		"play-button	stop-button	tempo-input";
 	justify-content: center;
 
 	&__play {
-		cursor: pointer;
-		font-size: 1.5rem;
-		color: black;
-		font-weight: 900;
-		background-color: colours.$brand2;
-		padding: 0.25em 1em;
-		margin: 0.5em;
-		border: 2px solid colours.$brand2;
-		border-radius: 3px;
+		@include components.playbackButton;
+		grid-area: play-button;
 
 		&-label {
+			grid-area: play-label;
 			color: colours.$white;
 			text-align: center;
 		}
+	}
+	&__stop {
+		@include components.playbackButton;
+		grid-area: stop-button;
 
-		&:focus,
-		&:hover {
-			color: colours.$grey-90;
-			background-color: colours.$brand1;
-			background-image: linear-gradient(colours.$brand1, colours.$brand2);
-			border: 2px solid colours.$grey-90;
+		&-label {
+			grid-area: stop-label;
+			color: colours.$white;
+			text-align: center;
 		}
 	}
 
 	&__tempo {
+		grid-area: tempo-input;
 		margin: 1em;
+		padding-right: 1em;
+
 		border-radius: 3px;
 		text-align: center;
 		font-size: 1rem;
@@ -214,8 +229,18 @@ body {
 		width: 5em;
 
 		&-label {
+			grid-area: tempo-label;
 			color: colours.$white;
 			text-align: center;
+		}
+
+		&-bpm {
+			grid-area: tempo-input;
+			cursor: text;
+			justify-self: flex-end;
+			align-self: center;
+			margin: 0.5em 2.25em 0;
+			font-size: 0.625rem;
 		}
 	}
 }

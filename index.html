@@ -20,9 +20,14 @@
 			</section>
 			<section class="playback">
 				<label class="playback__play-label" for="play">Play</label>
-				<label class="playback__tempo-label" for="tempo">Tempo</label>
 				<button class="playback__play" id="play">▶</button>
+
+				<label class="playback__stop-label" for="stop">Stop</label>
+				<button class="playback__stop" id="stop">⏹</button>
+
+				<label class="playback__tempo-label" for="tempo">Tempo</label>
 				<input class="playback__tempo" id="tempo" placeholder="Enter Tempo" type="number" value="120" min="60" max="240" step="1" />
+				<label class="playback__tempo-bpm" for="tempo">bpm</label>
 			</section>
 		</main>
 		<footer class="app__footer">
