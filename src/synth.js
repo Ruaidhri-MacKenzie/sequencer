@@ -9,7 +9,7 @@ export default class Synth {
 		};
 
 		this.filter = {
-			type: "low-pass",
+			type: "lowpass",
 			cutoff: 500,
 			resonance: 0,
 		};
