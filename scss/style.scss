@@ -1,6 +1,7 @@
 @use "colours";
 @use "fonts";
-@use "components";
+@use "sequencer";
+@use "synth";
 
 // CSS reset defaults
 *,
@@ -11,14 +12,14 @@
 	box-sizing: border-box;
 }
 
-body {
+// LAYOUT
+.app {
+	// <body>
 	height: 100vh;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr) auto;
 	font-family: fonts.$body;
-}
 
-.app {
 	&__header {
 		background-color: colours.$brand1;
 		background-image: linear-gradient(colours.$brand2, colours.$brand1);
@@ -30,9 +31,16 @@ body {
 		padding-left: 2em;
 	}
 
-	&__main {
+	&__sequencer {
 		display: grid;
 		grid-template-rows: 1fr auto;
+	}
+
+	&__synth {
+		display: grid;
+		grid-template-areas:
+			"osc	filter	env	lfo"
+			"key	key			key	master";
 	}
 
 	&__footer {
@@ -48,6 +56,7 @@ body {
 	}
 }
 
+// SEQUENCER
 .channel-list {
 	overflow-y: scroll;
 	background-color: #555;
@@ -128,12 +137,12 @@ body {
 
 	&__solo {
 		grid-area: solo;
-		@include components.channelButton(colours.$highlight-50);
+		@include sequencer.channelButton(colours.$highlight-50);
 	}
 
 	&__mute {
 		grid-area: mute;
-		@include components.channelButton(colours.$primary-40);
+		@include sequencer.channelButton(colours.$primary-40);
 	}
 
 	&__sequence {
@@ -197,7 +206,7 @@ body {
 	justify-content: center;
 
 	&__play {
-		@include components.playbackButton;
+		@include sequencer.playbackButton;
 		grid-area: play-button;
 
 		&-label {
@@ -207,7 +216,7 @@ body {
 		}
 	}
 	&__stop {
-		@include components.playbackButton;
+		@include sequencer.playbackButton;
 		grid-area: stop-button;
 
 		&-label {
@@ -242,5 +251,183 @@ body {
 			margin: 0.5em 2.25em 0;
 			font-size: 0.625rem;
 		}
+	}
+}
+
+// SYNTH
+.oscillator {
+	@include synth.group;
+	grid-area: osc;
+
+	&__content {
+		display: grid;
+		grid-template-areas: "waveform display";
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__waveform {
+		@include synth.select;
+		grid-area: waveform;
+	}
+
+	&__sine,
+	&__square,
+	&__triangle,
+	&__sawtooth {
+		@include synth.radio;
+	}
+
+	&__oscilloscope {
+		grid-area: display;
+		width: 400px;
+		height: 200px;
+		background-color: #000000;
+		border: 1px solid #000000;
+	}
+}
+
+.filter {
+	@include synth.group;
+	grid-area: filter;
+
+	&__content {
+		display: grid;
+		grid-template-areas:
+			"type		cutoff"
+			"type		q";
+		align-items: center;
+	}
+
+	&__type {
+		@include synth.select;
+		grid-area: type;
+	}
+
+	&__lowpass,
+	&__band,
+	&__highpass {
+		@include synth.radio;
+	}
+
+	&__cutoff {
+		@include synth.pot;
+		grid-area: cutoff;
+	}
+
+	&__q {
+		@include synth.pot;
+		grid-area: q;
+	}
+}
+
+.envelope {
+	@include synth.group;
+	grid-area: env;
+
+	&__content {
+		display: flex;
+		justify-content: center;
+	}
+
+	&__attack {
+		@include synth.fader(#000000);
+	}
+
+	&__decay {
+		@include synth.fader(#000000);
+	}
+
+	&__sustain {
+		@include synth.fader(#000000);
+	}
+
+	&__release {
+		@include synth.fader(#000000);
+	}
+}
+
+.lfo {
+	@include synth.group;
+	grid-area: lfo;
+
+	&__content {
+		display: grid;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__rate {
+		@include synth.pot;
+	}
+
+	&__depth {
+		@include synth.pot;
+	}
+}
+
+.keyboard {
+	@include synth.group;
+	grid-area: key;
+
+	&__content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__keys {
+		display: flex;
+		justify-content: center;
+		background-color: #cccccc;
+		padding: 0.5em 0.5em 1em;
+		box-shadow: -2px -2px 1px #000000, inset -2px -3px 2px #000000;
+	}
+
+	&__key {
+		cursor: pointer;
+		width: 58px;
+		height: 196px;
+		box-shadow: 2px 2px 2px #000000;
+		background-color: #ffffff;
+
+		&:hover {
+			background-color: #eeeeee;
+		}
+	}
+}
+
+.master {
+	@include synth.group;
+	grid-area: master;
+
+	&__content {
+		display: grid;
+		grid-template-areas: "volume	patch";
+	}
+
+	&__volume {
+		@include synth.fader(#990000);
+		grid-area: volume;
+	}
+
+	&__patches {
+		grid-area: patch;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		text-align: center;
+	}
+
+	&__save {
+		@include synth.patchButton();
+	}
+
+	&__load {
+		@include synth.patchButton();
+	}
+
+	&__rename {
+		@include synth.patchButton();
 	}
 }

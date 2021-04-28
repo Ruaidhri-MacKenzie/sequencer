@@ -1,18 +1,14 @@
-$brand1: #800000;
-$brand2: #ff0000;
-$highlight: hsl(195, 100%, 50%);
-$light: #f1f2f3;
-$dark: #0f0f0f;
-$grey: #ababab;
-$darkgrey: #545454;
-$lightgrey: #cccccc;
-
 $primary-10: hsl(0, 100%, 10%);
-$primary-25: hsl(0, 90%, 20%);
-$primary-30: hsl(0, 80%, 30%);
-$primary-40: hsl(0, 70%, 40%);
-$primary-50: hsl(0, 60%, 50%);
-$primary-60: hsl(0, 50%, 60%);
+$primary-20: hsl(0, 95%, 20%);
+$primary-30: hsl(0, 90%, 30%);
+$primary-40: hsl(0, 85%, 40%);
+$primary-50: hsl(0, 80%, 50%);
+$primary-60: hsl(0, 75%, 60%);
+
+$brand1: hsl(0, 100%, 25%);
+$brand2: hsl(0, 100%, 50%);
+// $brand1: $primary-20;
+// $brand2: $primary-40;
 
 $secondary-10: hsl(40, 100%, 10%);
 $secondary-20: hsl(40, 90%, 20%);
