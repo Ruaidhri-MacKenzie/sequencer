@@ -3,43 +3,6 @@
 @use "sequencer";
 @use "synth";
 
-@mixin navButton {
-	cursor: pointer;
-	margin: 0.5em;
-	padding: 0.25em 1em;
-	font-size: 1.5rem;
-	font-weight: 900;
-	color: colours.$black;
-	background-color: transparent;
-	border: 0.125em solid currentColor;
-	border-radius: 0.5em;
-	position: relative;
-
-	&--active {
-		color: colours.$secondary-50;
-		text-shadow: 0 0 0.25em currentColor;
-		box-shadow: 0 0 0.5em currentColor, inset 0 0 0.5em currentColor;
-	}
-
-	&::after {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		text-shadow: 0 0 0.5em currentColor;
-		box-shadow: 0 0 0.5em currentColor, inset 0 0 0.25em currentColor;
-		opacity: 0;
-		transition: opacity 100ms linear;
-	}
-
-	&:hover::after,
-	&:focus::after {
-		opacity: 1;
-	}
-}
-
 // CSS reset defaults
 *,
 *::before,
@@ -55,39 +18,29 @@
 	height: 100vh;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr) auto;
-	font-family: fonts.$sans-serif;
+	font-family: fonts.$body;
 
 	&__header {
 		background-color: colours.$brand1;
 		background-image: linear-gradient(colours.$brand2, colours.$brand1);
-		display: grid;
-		grid-template-columns: auto auto 1fr;
 	}
 
 	&__logo {
-		padding: 0.5em 2em 0;
+		padding: 0.5em;
+		padding-bottom: 0;
+		padding-left: 2em;
 	}
 
-	&__nav {
-		width: 100%;
-		justify-self: center;
-		align-items: center;
-		display: flex;
-		justify-content: space-evenly;
-
-		&-sequencer {
-			@include navButton;
-		}
-
-		&-synth {
-			@include navButton;
-		}
-	}
-
-	&__content {
+	&__sequencer {
 		display: grid;
-		grid-template-areas: "main";
-		grid-template-rows: minmax(0, 1fr);
+		grid-template-rows: 1fr auto;
+	}
+
+	&__synth {
+		display: grid;
+		grid-template-areas:
+			"osc	filter	env	lfo"
+			"key	key			key	master";
 	}
 
 	&__footer {
@@ -96,9 +49,385 @@
 
 	&__copyright {
 		font-size: 0.75rem;
-		font-family: fonts.$sans-serif;
+		font-family: fonts.$copyright;
 		color: colours.$grey-90;
 		text-align: right;
 		padding: 0.75em;
+	}
+}
+
+// SEQUENCER
+.channel-list {
+	overflow-y: scroll;
+	background-color: #555;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+
+	&__controls {
+		padding-top: 1em;
+		padding-left: 1em;
+	}
+
+	&__sequences {
+		overflow-x: scroll;
+		overflow-y: hidden;
+		background-color: #555;
+		padding-top: 1em;
+		padding-right: 1em;
+	}
+}
+
+.channel {
+	margin: 0.5em;
+	margin-right: 0;
+	padding: 0.5em 1em;
+	background-color: colours.$grey-60;
+	border-radius: 5px 0 0 5px;
+	display: grid;
+	grid-template-areas:
+		"patch-label	pan-label	level-label	.			."
+		"patch				pan				level				solo	mute";
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+
+	&__patch {
+		grid-area: patch;
+		cursor: pointer;
+		width: 10em;
+		margin: 0 0.5em;
+		padding: 0.25em;
+
+		&-label {
+			grid-area: patch-label;
+			font-size: 0.75rem;
+			align-self: flex-end;
+			margin: 0 0.5em;
+		}
+	}
+
+	&__pan {
+		grid-area: pan;
+		width: 5em;
+		margin: 0 0.5em;
+		padding: 0.25em;
+
+		&-label {
+			grid-area: pan-label;
+			font-size: 0.75rem;
+			align-self: flex-end;
+			margin: 0 0.5em;
+		}
+	}
+
+	&__level {
+		grid-area: level;
+		width: 5em;
+		margin: 0 0.5em;
+		padding: 0.25em;
+		text-align: center;
+
+		&-label {
+			grid-area: level-label;
+			font-size: 0.75rem;
+			margin: 0 0.5em;
+			align-self: flex-end;
+		}
+	}
+
+	&__solo {
+		grid-area: solo;
+		@include sequencer.channelButton(colours.$highlight-50);
+	}
+
+	&__mute {
+		grid-area: mute;
+		@include sequencer.channelButton(colours.$primary-40);
+	}
+
+	&__sequence {
+		width: max-content;
+		margin: 0.5em;
+		margin-left: 0;
+		padding: 1.5em 1em;
+		background-color: colours.$grey-50;
+		border-radius: 0 5px 5px 0;
+		display: flex;
+		align-items: center;
+		counter-reset: bar;
+	}
+}
+
+.step {
+	margin: 0 0.25em;
+	font-size: 0.75rem;
+	width: 1.25em;
+	height: 1.75em;
+	background-color: none;
+	border: 2px solid red;
+	text-align: center;
+	border-radius: 0.5em;
+	cursor: pointer;
+
+	&--active {
+		background-color: red;
+		border: 2px solid black;
+	}
+
+	&--playing {
+		border: 2px solid white;
+	}
+
+	&:nth-child(4n - 3) {
+		position: relative;
+		counter-increment: bar;
+
+		&:after {
+			content: counter(bar);
+			position: absolute;
+			top: -20px;
+			left: 0;
+			font-size: 0.625rem;
+		}
+	}
+
+	&:nth-child(4n) {
+		margin-right: 2em;
+	}
+}
+
+.playback {
+	background-color: colours.$grey-10;
+	padding: 1em;
+	display: grid;
+	grid-template-areas:
+		"play-label		stop-label	tempo-label"
+		"play-button	stop-button	tempo-input";
+	justify-content: center;
+
+	&__play {
+		@include sequencer.playbackButton;
+		grid-area: play-button;
+
+		&-label {
+			grid-area: play-label;
+			color: colours.$white;
+			text-align: center;
+		}
+	}
+	&__stop {
+		@include sequencer.playbackButton;
+		grid-area: stop-button;
+
+		&-label {
+			grid-area: stop-label;
+			color: colours.$white;
+			text-align: center;
+		}
+	}
+
+	&__tempo {
+		grid-area: tempo-input;
+		margin: 1em;
+		padding-right: 1em;
+
+		border-radius: 3px;
+		text-align: center;
+		font-size: 1rem;
+		appearance: textfield;
+		width: 5em;
+
+		&-label {
+			grid-area: tempo-label;
+			color: colours.$white;
+			text-align: center;
+		}
+
+		&-bpm {
+			grid-area: tempo-input;
+			cursor: text;
+			justify-self: flex-end;
+			align-self: center;
+			margin: 0.5em 2.25em 0;
+			font-size: 0.625rem;
+		}
+	}
+}
+
+// SYNTH
+.oscillator {
+	@include synth.group;
+	grid-area: osc;
+
+	&__content {
+		display: grid;
+		grid-template-areas: "waveform display";
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__waveform {
+		@include synth.select;
+		grid-area: waveform;
+	}
+
+	&__sine,
+	&__square,
+	&__triangle,
+	&__sawtooth {
+		@include synth.radio;
+	}
+
+	&__oscilloscope {
+		grid-area: display;
+		width: 400px;
+		height: 200px;
+		background-color: #000000;
+		border: 1px solid #000000;
+	}
+}
+
+.filter {
+	@include synth.group;
+	grid-area: filter;
+
+	&__content {
+		display: grid;
+		grid-template-areas:
+			"type		cutoff"
+			"type		q";
+		align-items: center;
+	}
+
+	&__type {
+		@include synth.select;
+		grid-area: type;
+	}
+
+	&__lowpass,
+	&__band,
+	&__highpass {
+		@include synth.radio;
+	}
+
+	&__cutoff {
+		@include synth.pot;
+		grid-area: cutoff;
+	}
+
+	&__q {
+		@include synth.pot;
+		grid-area: q;
+	}
+}
+
+.envelope {
+	@include synth.group;
+	grid-area: env;
+
+	&__content {
+		display: flex;
+		justify-content: center;
+	}
+
+	&__attack {
+		@include synth.fader(#000000);
+	}
+
+	&__decay {
+		@include synth.fader(#000000);
+	}
+
+	&__sustain {
+		@include synth.fader(#000000);
+	}
+
+	&__release {
+		@include synth.fader(#000000);
+	}
+}
+
+.lfo {
+	@include synth.group;
+	grid-area: lfo;
+
+	&__content {
+		display: grid;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__rate {
+		@include synth.pot;
+	}
+
+	&__depth {
+		@include synth.pot;
+	}
+}
+
+.keyboard {
+	@include synth.group;
+	grid-area: key;
+
+	&__content {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	&__keys {
+		display: flex;
+		justify-content: center;
+		background-color: #cccccc;
+		padding: 0.5em 0.5em 1em;
+		box-shadow: -2px -2px 1px #000000, inset -2px -3px 2px #000000;
+	}
+
+	&__key {
+		cursor: pointer;
+		width: 58px;
+		height: 196px;
+		box-shadow: 2px 2px 2px #000000;
+		background-color: #ffffff;
+
+		&:hover {
+			background-color: #eeeeee;
+		}
+	}
+}
+
+.master {
+	@include synth.group;
+	grid-area: master;
+
+	&__content {
+		display: grid;
+		grid-template-areas: "volume	patch";
+	}
+
+	&__volume {
+		@include synth.fader(#990000);
+		grid-area: volume;
+	}
+
+	&__patches {
+		grid-area: patch;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		text-align: center;
+	}
+
+	&__save {
+		@include synth.patchButton();
+	}
+
+	&__load {
+		@include synth.patchButton();
+	}
+
+	&__rename {
+		@include synth.patchButton();
 	}
 }

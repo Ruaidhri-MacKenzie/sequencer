@@ -1,4 +1,4 @@
-import { STEP_COUNT } from "../constants.js";
+import { STEP_COUNT } from "./constants.js";
 
 export default class Sequence {
 	constructor(context, index) {
@@ -8,22 +8,15 @@ export default class Sequence {
 
 		this.$element = document.getElementById(`sequence${this.index}`);
 
-		let $bar = null;
 		for (let i = 0; i < STEP_COUNT; i++) {
 			this.steps.push(false);
-
-			if (i % 16 === 0) {
-				$bar = document.createElement("div");
-				$bar.classList.add("bar");
-				this.$element.appendChild($bar);
-			}
 
 			const $step = document.createElement("div");
 			$step.classList.add("step");
 			$step.setAttribute("data-index", i);
-			$step.addEventListener("click", this.toggleStep.bind(this));
+			$step.onclick = this.toggleStep.bind(this);
 
-			$bar.appendChild($step);
+			this.$element.appendChild($step);
 		}
 	}
 

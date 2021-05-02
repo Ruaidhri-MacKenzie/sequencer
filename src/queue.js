@@ -1,4 +1,4 @@
-import { STEP_COUNT } from "../constants.js";
+import { STEP_COUNT } from "./constants.js";
 
 class Queue {
 	constructor(maxSize) {
