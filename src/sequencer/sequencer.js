@@ -1,10 +1,10 @@
+import { TEMPO, CHANNEL_COUNT, STEP_COUNT, LOOKAHEAD, SCHEDULE_AHEAD_TIME } from "../constants.js";
 import Channel from "./channel.js";
 import StepQueue from "./queue.js";
-import { TEMPO, CHANNEL_COUNT, STEP_COUNT, LOOKAHEAD, SCHEDULE_AHEAD_TIME } from "./constants.js";
 
 export default class Sequencer {
-	constructor() {
-		this.context = new AudioContext();
+	constructor(context) {
+		this.context = context;
 
 		// Channels
 		this.$channelTemplate = document.querySelector("#channel-template");
@@ -21,9 +21,9 @@ export default class Sequencer {
 		this.$stop = document.querySelector(".playback__stop");
 		this.$tempo = document.querySelector(".playback__tempo");
 
-		this.$play.onclick = this.play.bind(this);
-		this.$stop.onclick = this.stop.bind(this);
-		this.$tempo.onchange = this.setTempo.bind(this);
+		this.$play.addEventListener("click", this.play.bind(this));
+		this.$stop.addEventListener("click", this.stop.bind(this));
+		this.$tempo.addEventListener("input", this.setTempo.bind(this));
 
 		this.tempo = TEMPO.default; // in bpm
 		this.currentStep = 0;
@@ -83,12 +83,16 @@ export default class Sequencer {
 	scheduleStep(step, time) {
 		this.stepQueue.enqueue(step, time);
 
+		const beatsPerSecond = this.tempo / 60;
+		const secondsPerBeat = 1 / beatsPerSecond;
+		const secondsPerStep = secondsPerBeat / 4;
+
 		if (this.soloChannel != null) {
 			const channel = this.channelList[this.soloChannel];
-			channel.play(step, time);
+			channel.play(step, time, secondsPerStep);
 		} else {
 			this.channelList.forEach((channel) => {
-				channel.play(step, time);
+				channel.play(step, time, secondsPerStep);
 			});
 		}
 	}
@@ -108,8 +112,9 @@ export default class Sequencer {
 			const $sequences = document.querySelectorAll(".channel__sequence");
 
 			$sequences.forEach(($sequence) => {
-				$sequence.children[this.lastStepDrawn].classList.remove("step--playing");
-				$sequence.children[drawStep].classList.add("step--playing");
+				const $steps = $sequence.querySelectorAll(".step");
+				$steps[this.lastStepDrawn].classList.remove("step--playing");
+				$steps[drawStep].classList.add("step--playing");
 			});
 
 			this.lastStepDrawn = drawStep;
@@ -157,7 +162,8 @@ export default class Sequencer {
 		this.currentStep = 0;
 		const $sequences = document.querySelectorAll(".channel__sequence");
 		$sequences.forEach(($sequence) => {
-			$sequence.children[this.lastStepDrawn].classList.remove("step--playing");
+			const $steps = $sequence.querySelectorAll(".step");
+			$steps[this.lastStepDrawn].classList.remove("step--playing");
 		});
 	}
 }
